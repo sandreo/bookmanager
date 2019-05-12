@@ -1,0 +1,271 @@
+<html>
+<head>
+    <title>Books Page</title>
+
+    <style type="text/css">
+        .tg {
+            border-collapse: collapse;
+            border-spacing: 0;
+            border-color: #ccc;
+        }
+
+        .tg td {
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            padding: 10px 5px;
+            border-style: solid;
+            border-width: 1px;
+            overflow: hidden;
+            word-break: normal;
+            border-color: #ccc;
+            color: #333;
+            background-color: #fff;
+        }
+
+        .tg th {
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            font-weight: normal;
+            padding: 10px 5px;
+            border-style: solid;
+            border-width: 1px;
+            overflow: hidden;
+            word-break: normal;
+            border-color: #ccc;
+            color: #333;
+            background-color: #f0f0f0;
+        }
+
+        .tg .tg-4eph {
+            background-color: #f9f9f9
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+    <script type="text/javascript">
+        function startbooklist() {
+            $.ajax(
+                {
+                    url: 'http://localhost:8080/books',
+                    type: 'GET',
+                    success: function(data) {
+                        var container = $('#result');
+                        document.getElementById('result').innerHTML = "";
+                        table = $('<table class="tg">');
+
+                        data.forEach(function(user) {
+                            var tr = $('<tr>');
+                            tr.append('<td width="80">' + user['id'] + '</td>');
+
+                            ['bookTitle', 'bookAuthor', 'price'].forEach(function(attr) {
+                                tr.append('<td width="120">' + user[attr] + '</td>');
+                            });
+                            tr.append('<td width="60" align="center">' + '<input type="submit" onclick="downForm(' + user['id'] + ')" value="Edit"/>' + '</td>');
+                            tr.append('<td width="60" align="center">' + '<input type="submit" onclick="deleteById(' + user['id'] + ')" value="Delete"/>' + '</td>');
+                            tr.append('</tr>');
+                            table.append(tr);
+
+                            var tr2 = $('<tr id="tdhidden' + user['id'] + '" style="display: none; margin-top: 2px; margin-bottom: 2px">');
+                            tr2.append('<td style="background-color: #f0f0f0" width="80">' + user['id'] + '</td>');
+
+                            ['bookTitle', 'bookAuthor', 'price'].forEach(function(attr) {
+                                tr2.append('<td width="120"><input class="' + attr + '" style="max-width: 120px" type="text" value="' + user[attr] + '"/></td>');
+                            });
+                            tr2.append('<td width="60" align="center">' + '<input style="max-width: 60px" type="submit" onclick="editForm(' + user['id'] + ')" value="Apply"/>' + '</td>');
+                            tr2.append('</tr>');
+                            table.append(tr2);
+                        });
+
+                        container.append(table);
+                    }
+                });
+        };
+        window.onload = startbooklist;
+    </script>
+
+    <script>
+        function downForm(id)
+        {
+            $("#tdhidden" + id).css("display", "");
+        }
+    </script>
+
+    <script type="text/javascript">
+        function editForm(id) {
+            var bookTitle = $("#tdhidden" + id + " .bookTitle").val();
+            var bookAuthor = $("#tdhidden" + id + " .bookAuthor").val();
+            var price = $("#tdhidden" + id + " .price").val();
+
+            var body = {id, bookTitle, bookAuthor, price};
+            var myForm = JSON.stringify(body);
+            console.log(myForm);
+            $.ajax(
+                {
+                    url: 'http://localhost:8080/books',
+                    type: 'PUT',
+                    data: myForm,
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    success: function(data) {
+                        var container = $('#result');
+                        document.getElementById('result').innerHTML = "";
+                        table = $('<table class="tg">');
+
+                        data.forEach(function(user) {
+                            var tr = $('<tr>');
+                            tr.append('<td width="80">' + user['id'] + '</td>');
+
+                            ['bookTitle', 'bookAuthor', 'price'].forEach(function(attr) {
+                                tr.append('<td width="120">' + user[attr] + '</td>');
+                            });
+                            tr.append('<td width="60" align="center">' + '<input type="submit" onclick="downForm(' + user['id'] + ')" value="Edit"/>' + '</td>');
+                            tr.append('<td width="60" align="center">' + '<input type="submit" onclick="deleteById(' + user['id'] + ')" value="Delete"/>' + '</td>');
+                            tr.append('</tr>');
+                            table.append(tr);
+
+                            var tr2 = $('<tr id="tdhidden' + user['id'] + '" style="display: none; margin-top: 2px; margin-bottom: 2px">');
+                            tr2.append('<td style="background-color: #f0f0f0" width="80">' + user['id'] + '</td>');
+
+                            ['bookTitle', 'bookAuthor', 'price'].forEach(function(attr) {
+                                tr2.append('<td width="120"><input class="' + attr + '" style="max-width: 120px" type="text" value="' + user[attr] + '"/></td>');
+                            });
+                            tr2.append('<td width="60" align="center">' + '<input style="max-width: 60px" type="submit" onclick="editForm(' + user['id'] + ')" value="Apply"/>' + '</td>');
+                            tr2.append('</tr>');
+                            table.append(tr2);
+                        });
+
+                        container.append(table);
+                    }
+                });
+        }
+    </script>
+
+    <script type="text/javascript">
+        function deleteById(id) {
+            var urlid = "http://localhost:8080/books/" + id;
+            $.ajax(
+                {
+                    url: urlid,
+                    type: 'DELETE',
+                    success: function(data) {
+                        var container = $('#result');
+                        document.getElementById('result').innerHTML = "";
+                        table = $('<table class="tg">');
+
+                        data.forEach(function(user) {
+                            var tr = $('<tr>');
+                            tr.append('<td width="80">' + user['id'] + '</td>');
+
+                            ['bookTitle', 'bookAuthor', 'price'].forEach(function(attr) {
+                                tr.append('<td width="120">' + user[attr] + '</td>');
+                            });
+                            tr.append('<td width="60" align="center">' + '<input type="submit" onclick="downForm(' + user['id'] + ')" value="Edit"/>' + '</td>');
+                            tr.append('<td width="60" align="center">' + '<input type="submit" onclick="deleteById(' + user['id'] + ')" value="Delete"/>' + '</td>');
+                            tr.append('</tr>');
+                            table.append(tr);
+
+                            var tr2 = $('<tr id="tdhidden' + user['id'] + '" style="display: none; margin-top: 2px; margin-bottom: 2px">');
+                            tr2.append('<td style="background-color: #f0f0f0" width="80">' + user['id'] + '</td>');
+
+                            ['bookTitle', 'bookAuthor', 'price'].forEach(function(attr) {
+                                tr2.append('<td width="120"><input class="' + attr + '" style="max-width: 120px" type="text" value="' + user[attr] + '"/></td>');
+                            });
+                            tr2.append('<td width="60" align="center">' + '<input style="max-width: 60px" type="submit" onclick="editForm(' + user['id'] + ')" value="Apply"/>' + '</td>');
+                            tr2.append('</tr>');
+                            table.append(tr2);
+                        });
+
+                        container.append(table);
+                    }
+                });
+        }
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#submitform').click(function (e) {
+                var body = {"bookTitle": $('#bookTitle').val(), "bookAuthor": $('#bookAuthor').val(), "price": $('#price').val()};
+                var myForm = JSON.stringify(body);
+                console.log(myForm);
+                $.ajax(
+                    {
+                        url: 'http://localhost:8080/books',
+                        type: 'POST',
+                        data: myForm,
+                        contentType: 'application/json',
+                        dataType: 'json',
+                        success: function(data) {
+                            var container = $('#result');
+                            document.getElementById('result').innerHTML = "";
+                            table = $('<table class="tg">');
+
+                            data.forEach(function(user) {
+                                var tr = $('<tr>');
+                                tr.append('<td width="80">' + user['id'] + '</td>');
+
+                                ['bookTitle', 'bookAuthor', 'price'].forEach(function(attr) {
+                                    tr.append('<td width="120">' + user[attr] + '</td>');
+                                });
+                                tr.append('<td width="60" align="center">' + '<input type="submit" onclick="downForm(' + user['id'] + ')" value="Edit"/>' + '</td>');
+                                tr.append('<td width="60" align="center">' + '<input type="submit" onclick="deleteById(' + user['id'] + ')" value="Delete"/>' + '</td>');
+                                tr.append('</tr>');
+                                table.append(tr);
+
+                                var tr2 = $('<tr id="tdhidden' + user['id'] + '" style="display: none; margin-top: 2px; margin-bottom: 2px">');
+                                tr2.append('<td style="background-color: #f0f0f0" width="80">' + user['id'] + '</td>');
+
+                                ['bookTitle', 'bookAuthor', 'price'].forEach(function(attr) {
+                                    tr2.append('<td width="120"><input class="' + attr + '" style="max-width: 120px" type="text" value="' + user[attr] + '"/></td>');
+                                });
+                                tr2.append('<td width="60" align="center">' + '<input style="max-width: 60px" type="submit" onclick="editForm(' + user['id'] + ')" value="Apply"/>' + '</td>');
+                                tr2.append('</tr>');
+                                table.append(tr2);
+                            });
+
+                            container.append(table);
+                        }
+                    });
+            });
+        });
+    </script>
+</head>
+<body>
+<a href="http://localhost:8080/books">Back to main menu</a>
+
+<br/>
+<br/>
+
+<h1>Book List</h1>
+    <table class="tg">
+        <tr>
+            <th width="80">ID</th>
+            <th width="120">Title</th>
+            <th width="120">Author</th>
+            <th width="120">Price</th>
+            <th width="60">Edit</th>
+            <th width="60">Delete</th>
+        </tr>
+        
+    </table>
+    <div id="result"></div>
+
+<h1>Add a Book</h1>
+    <table>
+        <tr>
+            <td><label for="bookTitle">Title</label></td>
+            <td><input id="bookTitle" type="text" value=""/></td>
+        </tr>
+        <tr>
+            <td><label for="bookAuthor">Author</label></td>
+            <td><input id="bookAuthor" type="text" value=""/></td>
+        </tr>
+        <tr>
+            <td><label for="price">Price</label></td>
+            <td><input id="price" type="text" value="0"/></td>
+        </tr>
+        <tr>
+            <td colspan="2"><input type="submit" value="Add Book" id="submitform"/></td>
+        </tr>
+    </table>
+</body>
+</html>
