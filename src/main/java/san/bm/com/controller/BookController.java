@@ -1,13 +1,15 @@
 package san.bm.com.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.MediaType;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import san.bm.com.model.Book;
 import san.bm.com.service.BookService;
+import java.util.List;
 
-@Controller
+@RestController
+@RequestMapping(value = "books")
 public class BookController {
     private BookService bookService;
 
@@ -16,39 +18,31 @@ public class BookController {
         this.bookService = bookService;
     }
 
-    @GetMapping(value = "books")
-    public String listBooks(Model model) {
-        model.addAttribute("book", new Book());
-        model.addAttribute("listBooks", this.bookService.listBooks());
-        return "books";
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Book> listBooks() {
+        return bookService.listBooks();
     }
 
-    @PostMapping(value = "/books/add")
-    public String addBook(@ModelAttribute("book") Book book) {
-        if (book.getId() == 0) {
-            this.bookService.addBook(book);
-        } else {
-            this.bookService.updateBook(book);
-        }
-        return "redirect:/books";
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public List<Book> addBook(@RequestBody Book book) {
+            bookService.addBook(book);
+        return bookService.listBooks();
     }
 
-    @RequestMapping(value = "/remove/{id}")
-    public String removeBook(@PathVariable("id") long id) {
-        this.bookService.removeBook(id);
-        return "redirect:/books";
+    @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Book> removeBook(@PathVariable("id") long id) {
+        bookService.removeBook(id);
+        return bookService.listBooks();
     }
 
-    @RequestMapping(value = "edit/{id}")
-    public String editBook(@PathVariable("id") long id, Model model) {
-        model.addAttribute("book", this.bookService.getBookById(id));
-        model.addAttribute("listBooks", this.bookService.listBooks());
-        return "books";
+    @PutMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public List<Book> editBook(@RequestBody Book book) {
+        bookService.updateBook(book);
+        return bookService.listBooks();
     }
 
-    @RequestMapping("bookdata/{id}")
-    public String bookData(@PathVariable("id") long id, Model model) {
-        model.addAttribute("book", this.bookService.getBookById(id));
-        return "bookdata";
+    @RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public Book bookData(@PathVariable("id") long id, Model model) {
+        return bookService.getBookById(id);
     }
 }
