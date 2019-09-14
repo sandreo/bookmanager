@@ -1,6 +1,8 @@
 package san.bm.com.dao;
 
 import san.bm.com.model.Book;
+import san.bm.com.model.User;
+
 import java.util.List;
 
 public interface BookDao {

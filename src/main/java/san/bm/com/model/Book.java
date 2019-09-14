@@ -1,6 +1,9 @@
 package san.bm.com.model;
 
+import san.bm.com.dto.BookDTO;
+
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "books")
@@ -18,6 +21,18 @@ public class Book {
 
     @Column(name = "BOOK_PRICE")
     private int price;
+
+    @ManyToMany(mappedBy = "books")
+    private Set<User> users;
+
+    public BookDTO ConvertToBookDTO() {
+        BookDTO dto = new BookDTO();
+        dto.setId(id);
+        dto.setBookTitle(bookTitle);
+        dto.setBookAuthor(bookAuthor);
+        dto.setPrice(price);
+        return dto;
+    }
 
     public long getId() {
         return id;
@@ -49,6 +64,14 @@ public class Book {
 
     public void setPrice(int price) {
         this.price = price;
+    }
+
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
     }
 
     @Override
