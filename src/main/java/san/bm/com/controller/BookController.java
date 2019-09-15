@@ -2,7 +2,6 @@ package san.bm.com.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import san.bm.com.dto.BookDTO;
 import san.bm.com.model.Book;
@@ -25,25 +24,22 @@ public class BookController {
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public List<BookDTO> addBook(@RequestBody Book book) {
-            bookService.addBook(book);
-        return bookService.listBooks();
+    public BookDTO addBook(@RequestBody Book book) {
+            return bookService.addBook(book);
     }
 
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<BookDTO> removeBook(@PathVariable("id") long id) {
+    public void removeBook(@PathVariable("id") long id) {
         bookService.removeBook(id);
-        return bookService.listBooks();
     }
 
     @PutMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public List<BookDTO> editBook(@RequestBody Book book) {
-        bookService.updateBook(book);
-        return bookService.listBooks();
+    public BookDTO editBook(@RequestBody Book book) {
+        return bookService.updateBook(book);
     }
 
     @RequestMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public BookDTO bookData(@PathVariable("id") long id, Model model) {
+    public BookDTO bookData(@PathVariable("id") long id) {
         return bookService.getBookById(id);
     }
 }

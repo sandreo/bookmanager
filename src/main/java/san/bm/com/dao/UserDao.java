@@ -4,8 +4,8 @@ import san.bm.com.model.User;
 import java.util.List;
 
 public interface UserDao {
-    void addUser(User book);
-    void updateUser(User book);
+    User addUser(User book);
+    User updateUser(User book);
     void removeUser(long id);
     User getUserById(long id);
     List<User> listUsers();

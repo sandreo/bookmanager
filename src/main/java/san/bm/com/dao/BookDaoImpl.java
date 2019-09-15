@@ -18,15 +18,17 @@ public class BookDaoImpl implements BookDao {
     private EntityManager em;
 
     @Override
-    public void addBook(Book book) {
-        em.persist(book);
+    public Book addBook(Book book) {
+        Book b = em.merge(book);
         logger.info("Book saved. Book details: " + book);
+        return b;
     }
 
     @Override
-    public void updateBook(Book book) {
-            em.merge(book);
+    public Book updateBook(Book book) {
+        Book b = em.merge(book);
         logger.info("Book update. Book details: " + book);
+        return b;
     }
 
     @Override

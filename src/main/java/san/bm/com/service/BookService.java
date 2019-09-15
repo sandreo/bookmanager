@@ -6,8 +6,8 @@ import san.bm.com.model.Book;
 import java.util.List;
 
 public interface BookService {
-    void addBook(Book book);
-    void updateBook(Book book);
+    BookDTO addBook(Book book);
+    BookDTO updateBook(Book book);
     void removeBook(long id);
     BookDTO getBookById(long id);
     List<BookDTO> listBooks();

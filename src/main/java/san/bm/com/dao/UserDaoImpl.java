@@ -3,9 +3,7 @@ package san.bm.com.dao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
-import san.bm.com.model.Book;
 import san.bm.com.model.User;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
@@ -19,15 +17,17 @@ public class UserDaoImpl implements UserDao {
     private EntityManager em;
 
     @Override
-    public void addUser(User user) {
-        em.persist(user);
+    public User addUser(User user) {
+        User u = em.merge(user);
         logger.info("User saved. User details: " + user);
+        return u;
     }
 
     @Override
-    public void updateUser(User user) {
-        em.merge(user);
+    public User updateUser(User user) {
+        User u = em.merge(user);
         logger.info("User update. User details: " + user);
+        return u;
     }
 
     @Override

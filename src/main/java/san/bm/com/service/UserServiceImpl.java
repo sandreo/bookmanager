@@ -1,14 +1,15 @@
 package san.bm.com.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 import san.bm.com.dao.BookDao;
 import san.bm.com.dao.UserDao;
 import san.bm.com.dto.UserDTO;
 import san.bm.com.model.Book;
 import san.bm.com.model.User;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,21 +31,26 @@ public class UserServiceImpl implements UserService{
 
     @Override
     @Transactional
-    public void addUser(User user) {
-        userDao.addUser(user);
-    }
-
-    @Override
-    public void addBookToUser(long userId, long bookId) {
-        Book book = bookDao.getBookById(bookId);
-        User user = userDao.getUserById(userId);
-        user.getBooks().add(book);
+    public UserDTO addUser(User user) {
+        return userDao.addUser(user).ConvertToUserDTO();
     }
 
     @Override
     @Transactional
-    public void updateUser(User user) {
-        userDao.updateUser(user);
+    public UserDTO addBookToUser(long userId, long bookId) {
+        User user = userDao.getUserById(userId);
+        Book book = bookDao.getBookById(bookId);
+            if (user != null || book != null) {
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            }
+        user.getBooks().add(book);
+        return user.ConvertToUserDTO();
+    }
+
+    @Override
+    @Transactional
+    public UserDTO updateUser(User user) {
+        return userDao.updateUser(user).ConvertToUserDTO();
     }
 
     @Override
