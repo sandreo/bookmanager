@@ -1,6 +1,5 @@
 package san.bm.com.dto;
 
-import san.bm.com.model.Book;
 import san.bm.com.model.User;
 
 import java.util.Set;
@@ -10,7 +9,7 @@ public class UserDTO {
     private String userName;
     private String addressName;
     private String professionName;
-    private Set<Book> books;
+    private Set<BookDTO> books;
 
     public User ConvertToUser() {
         User entity = new User();
@@ -51,11 +50,11 @@ public class UserDTO {
         this.professionName = professionName;
     }
 
-    public Set<Book> getBooks() {
+    public Set<BookDTO> getBooks() {
         return books;
     }
 
-    public void setBooks(Set<Book> books) {
+    public void setBooks(Set<BookDTO> books) {
         this.books = books;
     }
 }

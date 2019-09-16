@@ -59,11 +59,13 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    @Transactional
     public UserDTO getUserById(long id) {
         return userDao.getUserById(id).ConvertToUserDTO();
     }
 
     @Override
+    @Transactional
     public List<UserDTO> listUsers() {
         List<User> list = userDao.listUsers();
         List<UserDTO> userDTO = new ArrayList<>();

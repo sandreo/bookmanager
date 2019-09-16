@@ -5,9 +5,11 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+import san.bm.com.dto.BookDTO;
 import san.bm.com.dto.UserDTO;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -36,7 +38,11 @@ public class User {
     private Set<Book> books;
 
     public UserDTO ConvertToUserDTO() {
-        UserDTO dto = new  UserDTO();
+        UserDTO dto = new UserDTO();
+        Set<BookDTO> bookDTOSet = new HashSet<>();
+        for (Book book : books) {
+            bookDTOSet.add(book.ConvertToBookDTO());
+        }
         dto.setId(id);
         dto.setUserName(userName);
         if (address != null) {
@@ -46,7 +52,7 @@ public class User {
             dto.setProfessionName(profession.getProfessionName());
         }
         if (books != null) {
-            dto.setBooks(books);
+            dto.setBooks(bookDTOSet);
         }
         return dto;
     }
