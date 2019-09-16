@@ -1,13 +1,12 @@
 package san.bm.com.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 import san.bm.com.dao.BookDao;
 import san.bm.com.dao.UserDao;
 import san.bm.com.dto.UserDTO;
+import san.bm.com.exceptions.ResourceNotFoundException;
 import san.bm.com.model.Book;
 import san.bm.com.model.User;
 import java.util.ArrayList;
@@ -40,8 +39,8 @@ public class UserServiceImpl implements UserService{
     public UserDTO addBookToUser(long userId, long bookId) {
         User user = userDao.getUserById(userId);
         Book book = bookDao.getBookById(bookId);
-            if (user != null || book != null) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            if (user == null || book == null) {
+                throw new ResourceNotFoundException();
             }
         user.getBooks().add(book);
         return user.ConvertToUserDTO();

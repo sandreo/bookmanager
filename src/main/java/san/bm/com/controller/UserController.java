@@ -25,7 +25,7 @@ public class UserController {
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public UserDTO addUser(@RequestBody User user) {
-        userService.addUser(user);
+        return userService.addUser(user);
     }
 
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)

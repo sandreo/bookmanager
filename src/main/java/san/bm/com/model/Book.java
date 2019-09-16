@@ -22,7 +22,7 @@ public class Book {
     @Column(name = "BOOK_PRICE")
     private int price;
 
-    @ManyToMany(mappedBy = "books")
+    @ManyToMany(mappedBy = "books", fetch = FetchType.LAZY)
     private Set<User> users;
 
     public BookDTO ConvertToBookDTO() {

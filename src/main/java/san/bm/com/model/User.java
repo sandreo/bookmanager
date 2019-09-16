@@ -1,5 +1,10 @@
 package san.bm.com.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import san.bm.com.dto.UserDTO;
 
 import javax.persistence.*;
@@ -17,15 +22,15 @@ public class User {
     @Column(name = "USER_NAME")
     private String userName;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ADDRESS_ID")
     private Address address;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PROFESSION_ID")
     private Profession profession;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "users_books", joinColumns = @JoinColumn(name = "USER_ID", referencedColumnName = "USER_ID"),
             inverseJoinColumns = @JoinColumn(name = "BOOK_ID", referencedColumnName = "ID"))
     private Set<Book> books;
@@ -39,6 +44,9 @@ public class User {
         }
         if (profession != null) {
             dto.setProfessionName(profession.getProfessionName());
+        }
+        if (books != null) {
+            dto.setBooks(books);
         }
         return dto;
     }
