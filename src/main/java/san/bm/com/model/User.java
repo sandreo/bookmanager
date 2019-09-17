@@ -39,9 +39,12 @@ public class User {
 
     public UserDTO ConvertToUserDTO() {
         UserDTO dto = new UserDTO();
-        Set<BookDTO> bookDTOSet = new HashSet<>();
-        for (Book book : books) {
-            bookDTOSet.add(book.ConvertToBookDTO());
+        if (books != null) {
+            Set<BookDTO> bookDTOSet = new HashSet<>();
+            for (Book book : books) {
+                bookDTOSet.add(book.ConvertToBookDTO());
+            }
+            dto.setBooks(bookDTOSet);
         }
         dto.setId(id);
         dto.setUserName(userName);
@@ -50,9 +53,6 @@ public class User {
         }
         if (profession != null) {
             dto.setProfessionName(profession.getProfessionName());
-        }
-        if (books != null) {
-            dto.setBooks(bookDTOSet);
         }
         return dto;
     }
